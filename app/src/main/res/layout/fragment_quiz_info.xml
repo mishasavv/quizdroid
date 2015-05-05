@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="edu.washington.mikhail3.quizdroid.QuizInfo"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="QUIZ"
+        android:id="@+id/title"
+        android:textColor="#fffcff23"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:typeface="sans"
+        android:background="#ff000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quiz"
+        android:id="@+id/quizDescr"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BEGIN QUIZ"
+        android:id="@+id/startQuiz"
+        android:layout_alignParentBottom="true"
+        style="@android:style/Holo.Light.ButtonBar"
+        android:layout_alignRight="@+id/quizTitle"
+        android:layout_alignEnd="@+id/quizTitle"
+        android:background="#fffcff23" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="This quiz has 0 questions."
+        android:id="@+id/qSetNum"
+        android:layout_below="@+id/quizDescr"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp" />
+
+</RelativeLayout>
