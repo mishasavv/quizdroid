@@ -19,10 +19,7 @@ public class prefActivity extends PreferenceActivity {
             if (preference instanceof ListPreference) {
                 ListPreference lp = (ListPreference) preference;
                 int index = lp.findIndexOfValue(StrVal);
-                preference.setSummary(
-                    index >= 0
-                    ? lp.getEntries()[index]
-                    : null);
+                preference.setSummary(index >= 0 ? lp.getEntries()[index] : null);
             } else {
                 preference.setSummary(StrVal);
             }
