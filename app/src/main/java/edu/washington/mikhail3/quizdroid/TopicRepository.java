@@ -12,5 +12,5 @@ import java.util.List;
  * Created by Misha Savvateev on 5/11/2015.
  */
 public interface TopicRepository {
-    public List<Topic> getQuiz(Context c);
+    public List<Topic> getQuiz();
 }

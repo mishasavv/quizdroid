@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.app.Application;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +22,7 @@ public class QuizApp extends Application{
     ArrayList<Quiz> questions;
     public QuizApp() {
         if (instance == null) {
-            SingleApp.initInstance();
+            SingleApp.getInstance();
         } else {
             Log.e("QuizApp", "Error. You tried to create more than 1 QuizApp. Bad boy.");
         }
@@ -31,13 +32,10 @@ public class QuizApp extends Application{
     public void onCreate() {
         super.onCreate();
         Context context = this.getApplicationContext();
-        try {
-            InputStream inputStream = getAssets().open("data.json");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        singleApp = new SingleApp();
-        topics = singleApp.getQuiz(context);
+
+        singleApp = new SingleApp(context);
+        topics = singleApp.getQuiz();
+
 
     }
     public ArrayList<Topic> getQuiz(){

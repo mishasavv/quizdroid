@@ -28,6 +28,7 @@ public class Topic implements Serializable{
     public void setQuestions(ArrayList<Quiz> questions) {
         this.questions = questions;
     }
+    public void addQ(Quiz q){this.questions.add(q);}
     public void setDesc(String desc) {
         this.description = desc;
     }

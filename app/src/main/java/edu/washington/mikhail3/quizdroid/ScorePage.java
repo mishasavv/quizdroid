@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,13 +35,15 @@ public class ScorePage extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_score_page, container, false);
-
         TextView scores = (TextView) rootView.findViewById(R.id.scoreReport);
         final Intent launchingIntent = getActivity().getIntent();
+        topics = (ArrayList <Topic>) launchingIntent.getSerializableExtra("quizData");
         quizNumber = launchingIntent.getIntExtra("quiz", -1);
+        questions = topics.get(quizNumber).getQuestions();
+        Log.v("Score", " "+questions.size() + "qNum" + quizNumber);
+//        Toast.makeText(rootView.getContext(), "hi "+questions.size(), Toast.LENGTH_LONG);
         qNum = launchingIntent.getIntExtra("question", 0);
         answered = launchingIntent.getIntExtra("answered", 0);
         score = launchingIntent.getIntExtra("score", 0);
@@ -61,8 +64,8 @@ public class ScorePage extends android.support.v4.app.Fragment {
         TextView userAnsShow = (TextView) rootView.findViewById(R.id.userAns);
         TextView corrAnsShow = (TextView) rootView.findViewById(R.id.corrAns);
 
-        userAnsShow.setText("You answered: " + questions.get(useAns).getQuestion());
-        corrAnsShow.setText("Correct answer: " + questions.get(correctAns).getQuestion());
+        userAnsShow.setText("You answered: " + questions.get(qNum-2).getAns(useAns));
+        corrAnsShow.setText("Correct answer: " + questions.get(qNum-2).getAns(questions.get(qNum-2).getCorrect()));
         TextView scoreReport = (TextView) rootView.findViewById(R.id.scoreReport);
         scoreReport.setText("Answered " + score+" correctly out of " + answered);
         Button button = (Button) rootView.findViewById(R.id.next);

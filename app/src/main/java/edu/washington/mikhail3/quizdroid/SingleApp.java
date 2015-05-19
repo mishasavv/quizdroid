@@ -1,27 +1,16 @@
 package edu.washington.mikhail3.quizdroid;
 
 import android.content.Context;
-import android.os.Message;
 import android.util.JsonReader;
 import android.util.JsonToken;
-import android.app.Application;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-
-import org.json.JSONObject;
-
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
-import android.app.*;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -29,130 +18,93 @@ import android.widget.Toast;
  */
 public class SingleApp implements TopicRepository {
     private static SingleApp instance;
-   public ArrayList<Topic> topics;
-
-    //public Context c;
+    public final static String FILE = "questions.json";
 
     public static SingleApp getInstance() {
         return instance;
     }
 
-    public static void initInstance() {
-        if (instance == null) {
-            instance = new SingleApp();
-        }
+    private ArrayList<Topic> topics;
+
+
+    public SingleApp(Context c) {
+        topics = new ArrayList<Topic>();
+        makeTopics(c);
     }
 
-//    public ArrayList<Topic> getQuiz() {
-//
-//        try {
-//            Context context = new Context();
-//
-//            InputStream in = SingleApp.context.getAssets().open("data.json");
-//            topics = readJsonStream(in);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return topics;
-//    }
-    public ArrayList<Topic> getQuiz(Context c) {
-    ArrayList<Topic> topics = new ArrayList<Topic>();
-        //this.c = c;
-    try {
-        topics = readJsonStream(c);
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-        return topics;
-    }
-    private ArrayList<Topic> readJsonStream(Context c) throws IOException {
-        InputStream in = c.getAssets().open("data.json");
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        Toast.makeText(c, "hi3", Toast.LENGTH_LONG).show();
+    private void makeTopics(Context c) {
         try {
-            Toast.makeText(c, "hi", Toast.LENGTH_LONG).show();
-            return readTopicArray(reader);
-
-        } finally {
-            Toast.makeText(c, "hi2", Toast.LENGTH_LONG).show();
-            reader.close();
+            JSONArray topicsArr = new JSONArray(loadJSON(c));
+            for (int i = 0; i < topicsArr.length(); i++) {
+                JSONObject topicObj = topicsArr.getJSONObject(i);
+                JSONArray questionsArr = topicObj.getJSONArray("questions");
+                Topic topic = new Topic();
+                topic.setDesc(topicObj.getString("desc"));
+                topic.setTitle(topicObj.getString("title"));
+                Log.v("SA", " " + questionsArr.length());
+                for (int j = 0; j < questionsArr.length(); j++) {
+                    JSONObject questionObj = questionsArr.getJSONObject(j);
+                    JSONArray answersArr = questionObj.getJSONArray("answers");
+                    Quiz question = new Quiz();
+                    question.setQuestion(questionObj.getString("text"));
+                    question.setCorrect(Integer.parseInt(questionObj.getString("answer")));
+                    question.setAns1(answersArr.get(0).toString());
+                    question.setAns2(answersArr.get(1).toString());
+                    question.setAns3(answersArr.get(2).toString());
+                    question.setAns4(answersArr.get(3).toString());
+                    topic.addQ(question);
+                }
+                topics.add(topic);
+            }
+        } catch (JSONException e) {
+            Log.e("SingleApp", "JSON Exception!", e);
+            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
-    private ArrayList<Topic> readTopicArray(JsonReader reader) throws IOException {
 
-        ArrayList<Topic> topics = new ArrayList<Topic>();
-        reader.beginArray();
-        while (reader.hasNext()) {
-            topics.add(readTopic(reader));
+    public static String loadJSON(Context c) {
+        String json;
+        try {
+            InputStream in = c.getAssets().open(FILE);
+            byte[] buffer = new byte[in.available()];
+            in.read(buffer);
+            in.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        reader.endArray();
+        return json;
+    }
+
+    public static String loadJSON(FileInputStream in) {
+        String json;
+        try {
+            byte[] buffer = new byte[in.available()];
+            in.read(buffer);
+            in.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    public static void write(String data, Context c) {
+        try {
+            File file = new File(c.getFilesDir().getAbsolutePath(), FILE);
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(data.getBytes());
+            out.close();
+        }
+        catch (IOException e) {
+            Log.e("Failed to write", "Exception " + e.toString());
+        }
+    }
+
+
+    public ArrayList<Topic> getQuiz() {
         return topics;
     }
-
-    private Topic readTopic(JsonReader reader) throws IOException {
-        Topic t = new Topic();
-        reader.beginObject();
-
-        while (reader.hasNext()) {
-            String name = reader.nextName();
-            if (name.equals("title")) {
-                t.setTitle(reader.nextString());
-            } else if (name.equals("desc")) {
-                t.setDesc(reader.nextString());
-            } else if (name.equals("questions")) {
-                ArrayList<Quiz> qs = new ArrayList<Quiz>();
-                reader.beginArray();
-                while (reader.hasNext()) {
-                    Quiz q = readQs(reader);
-                    qs.add(q);
-                }
-                reader.endArray();
-                t.setQuestions(qs);
-            } else {
-                reader.skipValue();
-            }
-        }
-        reader.endObject();
-        return t;
-    }
-    private Quiz readQs(JsonReader reader) throws IOException {
-        Quiz q = new Quiz();
-        reader.beginObject();
-        while (reader.hasNext()) {
-            String name = reader.nextName();
-            if (name.equals("text")) {
-                q.setQuestion(reader.nextString());
-            } else if (name.equals("answer")) {
-                q.setCorrect(reader.nextInt());
-            } else if (name.equals("answers") && reader.peek() != JsonToken.NULL) {
-                String[] ans = readStringArray(reader);
-                q.setAns1(ans[0]);
-                q.setAns2(ans[1]);
-                q.setAns3(ans[2]);
-                q.setAns4(ans[3]);
-            } else {
-            reader.skipValue();
-            }
-        }
-        return q;
-    }
-    private String[] readStringArray(JsonReader reader) throws IOException {
-        String[] strings = new String[4];
-        reader.beginArray();
-        int i = 0;
-        while (reader.hasNext() && i < 4) {
-            strings[i] = reader.nextString();
-            i++;
-        }
-        reader.endArray();
-        return strings;
-     }
-
-
-
-
-
-
 }
-

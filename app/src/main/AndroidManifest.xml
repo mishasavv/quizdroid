@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.washington.mikhail3.quizdroid" >
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".QuizApp"
         android:allowBackup="true"
@@ -21,7 +23,10 @@
             android:name=".QuizActivity"
             android:label="@string/title_activity_quiz" >
         </activity>
+        <activity
+            android:name=".prefActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
-
 
 </manifest>

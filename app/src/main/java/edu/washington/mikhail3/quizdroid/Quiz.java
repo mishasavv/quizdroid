@@ -29,6 +29,13 @@ public class Quiz implements Serializable {
     public String getAns4() {
         return ans4;
     }
+    public String getAns(int num){
+        if (num == 1){return ans1;}
+        else if (num == 2){return ans2;}
+        else if (num == 3){return ans3;}
+        else if (num == 4){return ans4;}
+        else return null;
+    }
     public int getCorrect() {
         return correct;
     }

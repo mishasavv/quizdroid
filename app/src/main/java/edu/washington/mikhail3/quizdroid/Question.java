@@ -1,6 +1,7 @@
 package edu.washington.mikhail3.quizdroid;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -66,7 +68,9 @@ public class Question extends android.support.v4.app.Fragment {
                     int radioId = answers.indexOfChild(radioButton);
                     ansNumber = radioId;
                     correctNum = questions.get(qNum-1).getCorrect();
-                    if(correctNum==radioId){
+                    Log.v("Question", "id" + radioId + "  -  " + ansNumber+"; ans" + correctNum);
+
+                    if((correctNum - 1)==radioId){
                         score++;
                         correct = true;
                     }

@@ -1,0 +1,10 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_title_url">URL</string>
+    <string name="pref_default_download_url">http://tednewardsandbox.site44.com/questions.json</string>
+    <string name="pref_header_data">Data and Downloads</string>
+    <string name="pref_title_download">Download check frequency</string>
+    <string name="pref_default_download_value">1</string>
+
+
+</resources>
