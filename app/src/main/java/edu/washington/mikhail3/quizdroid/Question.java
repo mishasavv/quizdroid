@@ -74,7 +74,7 @@ public class Question extends android.support.v4.app.Fragment {
                         score++;
                         correct = true;
                     }
-                    }
+                }
                     qNum++;
                     //next.putExtra("quiz", quizNumber);
                     launchingIntent.putExtra("score", score);
